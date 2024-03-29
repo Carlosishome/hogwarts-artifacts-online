@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ArtifactServiceTest {
@@ -188,6 +187,34 @@ class ArtifactServiceTest {
     verify(artifactRepository,times(1)).findById("1250808601744904192");
 
 }
+@Test
+    void testDeleteSuccess(){
+        //Given
+    Artifact artifact = new Artifact();
+    artifact.setId("1250808601744904192");
+    artifact.setName("Invisibility Cloak");
+    artifact.setDescription("An invisibility cloak is used to make the wearer invisible.");
+    artifact.setImageUrl("ImageUrl");
+    //when
+given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(artifact));
+doNothing().when(artifactRepository).deleteById("1250808601744904192");
+    //Then
+    artifactService.delete("1250808601744904192");
 
+    verify(artifactRepository,times(1)).deleteById("1250808601744904192");
 
+}
+    @Test
+    void testDeleteNotFound(){
+        // Given
+        String nonExistentArtifactId = "1250808601744904192";
+        given(artifactRepository.findById(nonExistentArtifactId)).willReturn(Optional.empty());
+
+        // Then
+        assertThrows(ArtifactNotFoundException.class, () -> {
+            artifactService.delete(nonExistentArtifactId);
+        });
+
+        verify(artifactRepository, never()).deleteById(nonExistentArtifactId);
+    }
 }
