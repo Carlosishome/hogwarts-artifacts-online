@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/v1/artifacts")
 public class ArtifactController {
     private final ArtifactService artifactService;
 
@@ -54,8 +55,17 @@ public class ArtifactController {
     }
 @PutMapping("/api/v1/artifacts/{artifactId}")
     public Result updateArtifact(@PathVariable String artifactId,@Valid @RequestBody ArtifactDto artifactDto){
+Artifact update = this.artifactDtoToArtifactConverter.convert(artifactDto);
+Artifact updatedArtifact = this.artifactService.update(artifactId, update);
+ArtifactDto updatedArtifactDto = this.artifactToArtifactDtoConverter.convert(updatedArtifact);
 
-        return null;
+        return new Result(true, StatusCode.SUCCESS, "Update Success",updatedArtifactDto);
+
     }
+    @DeleteMapping("/api/v1/artifacts/{artifactId}")
 
+        public Result deleteArtifact(@PathVariable String artifactId){
+        this.artifactService.delete(artifactId);
+        return new Result(true, StatusCode.SUCCESS,"Delete Success");
+        }
 }
