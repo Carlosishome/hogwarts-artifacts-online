@@ -1,4 +1,4 @@
-package edu.tcu.cs.hogwartsartifactsonline.wizard;
+package edu.tcu.cs.hogwartsartifactsonline.wizard.dto;
 
 public record WizardDto(Integer id,
                         String name,

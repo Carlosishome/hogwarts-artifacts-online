@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.dto.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.system.StatusCode;
+import jakarta.validation.Valid;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) //turns off spring specurity
 class ArtifactControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +39,11 @@ class ArtifactControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
     private List<Artifact> artifacts;
+
+        @Value("${api.endpoint.base-url}")
+        String baseUrl;
 
     @BeforeEach
     void setUp() {
@@ -96,7 +102,7 @@ class ArtifactControllerTest {
         given(artifactService.findById("1250808601744904191")).willReturn(artifacts.get(0));
 
         // When & Then
-        mockMvc.perform(get("/api/v1/artifacts/1250808601744904191")
+        mockMvc.perform(get(this.baseUrl + "/artifacts/12508086017449049191" )
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
@@ -177,7 +183,7 @@ class ArtifactControllerTest {
     }
 
     @Test
-    void tesUpdatedArtifactSuccess() throws Exception {
+    void testUpdatedArtifactSuccess() throws Exception {
         // Given
         ArtifactDto artifactDto = new ArtifactDto("1250808601744904192",
                 "Invisibility Cloak",

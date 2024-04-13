@@ -77,10 +77,10 @@ class ArtifactServiceTest {
 
         a.setOwner(w);
 
-        given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));//Defines the behavior of mock object
+        given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));//Defines the behavior of mock object
 
         // When. Act on the target behavior. when steps should cover the method to be tested.
-        Artifact returnedArtifact = artifactService.findById("1250808601744904192");
+        Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
 
 
         // Then. Assert expected outcomes
@@ -152,15 +152,15 @@ class ArtifactServiceTest {
     oldArtifact.setImageUrl("ImageUrl");
 
     Artifact update = new Artifact();
-    update.setId("1250808601744904192");
+   // update.setId("1250808601744904192");
     update.setName("Invisibility Cloak");
     update.setDescription("An invisibility cloak is used to make the wearer invisible.");
     update.setImageUrl("ImageUrl");
 
-    given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(oldArtifact));
-    given(artifactRepository.save(oldArtifact)).willReturn(oldArtifact);
+    given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(oldArtifact));
+    given(this.artifactRepository.save(oldArtifact)).willReturn(oldArtifact);
 
-   Artifact updatedArtifact =  artifactService.update("1250808601744904192", update);
+   Artifact updatedArtifact =  this.artifactService.update("1250808601744904192", update);
 
    assertThat(updatedArtifact.getId()).isEqualTo("1250808601744904192");
    assertThat(updatedArtifact.getDescription()).isEqualTo(update.getDescription());
