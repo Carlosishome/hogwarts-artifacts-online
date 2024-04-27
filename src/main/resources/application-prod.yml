@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    azure:
+      keyvault:
+        secret:
+          property-sources[0]:
+            endpoint: ${AZURE_KEY_VAULT_ENDPOINT} # environment variable
+  datasource:
+    url: ${datasource-url} # secret from Azure Key Vault
+    username: ${datasource-username} # secret from Azure Key Vault
+    password: ${datasource-password} # secret from Azure Key Vault
+  jpa:
+    hibernate:
+      ddl-auto: none # Turn off the DDL auto generation.
+ai:
+  openai:
+    endpoint: ${AI_OPENAI_ENDPOINT:https://api.openai.com/v1/chat/completions} # environment variable with a default value
+    api-key: ${ai-openai-api-key:your-openai-api-key} # secret from Azure Key Vault

@@ -13,20 +13,21 @@ import java.util.stream.Collectors;
 @Component
 public class JwtProvider {
 
-    private JwtEncoder jwtEncoder;
+    private final JwtEncoder jwtEncoder;
 
-    public JwtProvider(JwtEncoder jwtEncoder){
+
+    public JwtProvider(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
-
     }
 
     public String createToken(Authentication authentication) {
         Instant now = Instant.now();
-        long expiresIn = 2;
+        long expiresIn = 2; // 2 hours
 
-       String authorities =  authentication.getAuthorities().stream()
+        // Prepare a claim called authorities.
+        String authorities = authentication.getAuthorities().stream()
                 .map(grantedAuthority -> grantedAuthority.getAuthority())
-                .collect(Collectors.joining(""));
+                .collect(Collectors.joining(" "));// MUST BE space-delimited.
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -34,9 +35,9 @@ public class JwtProvider {
                 .expiresAt(now.plus(expiresIn, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("authorities", authorities)
-        .build();
-
+                .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+
 }

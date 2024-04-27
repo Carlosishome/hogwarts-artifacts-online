@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+
 import java.io.Serializable;
 
 @Entity
@@ -23,9 +24,12 @@ public class HogwartsUser implements Serializable {
     private boolean enabled;
 
     @NotEmpty(message = "roles are required.")
-    private String roles;
+    private String roles; // Space separated string
 
-    // Getter and Setter methods for id
+
+    public HogwartsUser() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -34,7 +38,6 @@ public class HogwartsUser implements Serializable {
         this.id = id;
     }
 
-    // Getter and Setter methods for username
     public String getUsername() {
         return username;
     }
@@ -43,7 +46,6 @@ public class HogwartsUser implements Serializable {
         this.username = username;
     }
 
-    // Getter and Setter methods for password
     public String getPassword() {
         return password;
     }
@@ -52,7 +54,6 @@ public class HogwartsUser implements Serializable {
         this.password = password;
     }
 
-    // Getter and Setter methods for enabled
     public boolean isEnabled() {
         return enabled;
     }
@@ -61,7 +62,6 @@ public class HogwartsUser implements Serializable {
         this.enabled = enabled;
     }
 
-    // Getter and Setter methods for roles
     public String getRoles() {
         return roles;
     }
@@ -69,4 +69,5 @@ public class HogwartsUser implements Serializable {
     public void setRoles(String roles) {
         this.roles = roles;
     }
+
 }

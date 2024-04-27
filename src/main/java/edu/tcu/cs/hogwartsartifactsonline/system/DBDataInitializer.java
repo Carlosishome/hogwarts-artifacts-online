@@ -1,18 +1,19 @@
 package edu.tcu.cs.hogwartsartifactsonline.system;
 
 import edu.tcu.cs.hogwartsartifactsonline.artifact.Artifact;
-import edu.tcu.cs.hogwartsartifactsonline.artifact.ArtifactNotFoundException;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.ArtifactRepository;
 import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.HogwartsUser;
-import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.UserRepository;
 import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.UserService;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.WizardRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("dev")
 public class DBDataInitializer implements CommandLineRunner {
+
     private final ArtifactRepository artifactRepository;
 
     private final WizardRepository wizardRepository;
@@ -20,15 +21,14 @@ public class DBDataInitializer implements CommandLineRunner {
     private final UserService userService;
 
 
-    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository) {
+    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository, UserService userService) {
         this.artifactRepository = artifactRepository;
         this.wizardRepository = wizardRepository;
-        this.userService = userService();
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
-
         Artifact a1 = new Artifact();
         a1.setId("1250808601744904191");
         a1.setName("Deluminator");
@@ -37,7 +37,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
         Artifact a2 = new Artifact();
         a2.setId("1250808601744904192");
-        a2.setName( "Invisibility Cloak");
+        a2.setName("Invisibility Cloak");
         a2.setDescription("An invisibility cloak is used to make the wearer invisible.");
         a2.setImageUrl("ImageUrl");
 
@@ -50,7 +50,7 @@ public class DBDataInitializer implements CommandLineRunner {
         Artifact a4 = new Artifact();
         a4.setId("1250808601744904194");
         a4.setName("The Marauder's Map");
-        a4.setDescription( "A magical map of Hogwarts created by Remus Lupin, Peter Pettigrew, Sirius Black, and James Potter while they were students at Hogwarts.");
+        a4.setDescription("A magical map of Hogwarts created by Remus Lupin, Peter Pettigrew, Sirius Black, and James Potter while they were students at Hogwarts.");
         a4.setImageUrl("ImageUrl");
 
         Artifact a5 = new Artifact();
@@ -79,7 +79,7 @@ public class DBDataInitializer implements CommandLineRunner {
 
         Wizard w3 = new Wizard();
         w3.setId(3);
-        w3.setName("Nevielle LongBottom");
+        w3.setName("Neville Longbottom");
         w3.addArtifact(a5);
 
         wizardRepository.save(w1);
@@ -87,6 +87,8 @@ public class DBDataInitializer implements CommandLineRunner {
         wizardRepository.save(w3);
 
         artifactRepository.save(a6);
+
+        // Create some users.
         HogwartsUser u1 = new HogwartsUser();
         u1.setId(1);
         u1.setUsername("john");
@@ -102,14 +104,15 @@ public class DBDataInitializer implements CommandLineRunner {
         u2.setRoles("user");
 
         HogwartsUser u3 = new HogwartsUser();
-        u3.setId(3); // Ensure each user has a unique ID
+        u3.setId(3);
         u3.setUsername("tom");
         u3.setPassword("qwerty");
         u3.setEnabled(false);
         u3.setRoles("user");
 
-        userService.save(u1);
-        userService.save(u2);
-        userService.save(u3);
+        this.userService.save(u1);
+        this.userService.save(u2);
+        this.userService.save(u3);
     }
+
 }
